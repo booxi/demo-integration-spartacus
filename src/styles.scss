@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'styles-config';
+@import '@spartacus/styles/index';
+
+/*
+In the event where the Booknow widget z-index conflicts with other components on the screen,
+it's possible to specify an iframe ID along with a specific z-order property to override the default value.
+*/
+#booxi_booknow_iframe_id { z-index: 1;}

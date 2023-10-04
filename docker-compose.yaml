@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+
+  # This builds, and serves the Verdaccio private repository, ready to be used.
+  booxi-spartacus:
+    image: booxi/spartacus
+    hostname: booxi-spartacus
+    build:
+      context: .
+      dockerfile: Dockerfile-spartacus
+    ports:
+      - "4873:4873"
+    restart: always

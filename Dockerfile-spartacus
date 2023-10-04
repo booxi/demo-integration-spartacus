@@ -1,0 +1,46 @@
+# Builds and serves Spartacus libraries on a local npm registry.
+FROM node:18.18.0
+
+# Create a source directory to hold the Spartacus source code
+WORKDIR /develop
+
+# Git clone the spartacus repository
+RUN git clone https://github.com/SAP/spartacus
+
+# Update the work directory to the Spartacus code base
+WORKDIR /develop/spartacus
+
+# Git checkout the spartacus exact version to build
+# This might give a warning that we'll be running into a detached head state. This is fine.
+RUN git checkout 6.4.0
+
+# Install the dependencies and build the libraries
+# This process can take a few minutes to complete.
+RUN npm install && npm run build:libs
+
+# Install the ts-node & verdaccio packages globally
+RUN npm install -g ts-node@10 verdaccio@4 wait-on@7
+
+# Copy some basic booxi verdaccio credentials
+# This prevents the expclit creation of a user via the 'npm adduser' commmand.
+COPY tools/verdaccio-htpasswd ./scripts/install/htpasswd
+
+# Copy the verdaccio config file.
+# This file contains an improtant instruction that allows the service to listen on all interfaces (listen: 0.0.0.0).
+COPY ./tools/verdaccio-config.yaml ./scripts/install/config.yaml
+
+# Specify the credentials to be used, to publish to the local registry
+# The _auth value is the base64 value of the booxi credentials, specified above in the htpasswd file.
+RUN touch ~/.npmrc && \
+    echo "registry=http://localhost:4873/" >> ~/.npmrc && \
+    echo "//localhost:4873/:_auth=\"Ym9veGk6aXhvb2I=\"" >> ~/.npmrc
+
+# Create the entry point script, and auto-publish the libraries
+RUN touch start.sh && \
+    echo "#!/bin/bash" >> start.sh && \
+    echo "echo 'publish' | ts-node ./tools/schematics/testing" >> start.sh && \
+    chmod +x start.sh
+
+# Lets publish, and serve!
+# Verdaccio's default port is: 4873
+ENTRYPOINT "./start.sh"

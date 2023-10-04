@@ -1,0 +1,18 @@
+<ng-container *ngIf="product$ | async as product">
+  <!-- Left here to demonstrate that product specific data can be used. -->
+  <!--
+  <p>Name: {{ product.name }}</p>
+  <p>Code: {{ product.code }}</p>
+  -->
+
+  <div class="d-flex align-items-center justify-content-between booxi-booknow">
+
+    <!-- Feel free to customize the button; Currently using the same style as the rest of the page. -->
+    <button (click)="openBookNow()" class="btn btn-primary btn-block">
+      Book a Consultation
+    </button>
+  </div>
+
+  <!-- Since we hooked/overwrote the 'AddToWishListComponent', let's add it back under our button. -->
+  <cx-add-to-wishlist></cx-add-to-wishlist>
+</ng-container>
