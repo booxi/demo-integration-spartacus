@@ -26,7 +26,7 @@ RUN npm install -g ts-node@10 verdaccio@4 wait-on@7
 COPY tools/verdaccio-htpasswd ./scripts/install/htpasswd
 
 # Copy the verdaccio config file.
-# This file contains an improtant instruction that allows the service to listen on all interfaces (listen: 0.0.0.0).
+# This file contains an important instruction that allows the service to listen on all interfaces (listen: 0.0.0.0).
 COPY ./tools/verdaccio-config.yaml ./scripts/install/config.yaml
 
 # Specify the credentials to be used, to publish to the local registry
